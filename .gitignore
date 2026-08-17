@@ -6,8 +6,8 @@ frontend/build/
 
 # Python / FastAPI
 backend/venv/
-backend/__pycache__/
-backend/.pytest_cache/
+**/__pycache__/
+**/.pytest_cache/
 backend/storage/
 backend/careerlens.db
 backend/.env
