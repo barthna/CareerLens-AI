@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api"
     
     # Database
-    DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/careerlens"
+    DATABASE_URL: str = "sqlite:///./careerlens.db"
     
     # JWT authentication
     JWT_SECRET: str = "super_secure_jwt_secret_key_change_me_in_production_123456"
