@@ -1,0 +1,18 @@
+# Node / Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+
+# Python / FastAPI
+backend/venv/
+backend/__pycache__/
+backend/.pytest_cache/
+backend/storage/
+backend/careerlens.db
+backend/.env
+.env
+
+# OS Files
+.DS_Store
+Thumbs.db
