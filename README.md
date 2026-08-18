@@ -1,40 +1,55 @@
-# CareerLens AI
+# <p align="center"><img src="assets/banner.png" alt="CareerLens AI Banner" width="100%" style="border-radius: 10px;" /></p>
 
-[![Next.js](https://img.shields.io/badge/Next.js-15+-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.111-emerald?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
-[![Docker](https://img.shields.io/badge/Docker-compose-blue?style=for-the-badge&logo=docker)](https://www.docker.com/)
+<h1 align="center">🔍 CareerLens AI</h1>
 
-**Understand your resume. Match smarter. Get hired faster.**
+<p align="center">
+  <strong>Understand your resume. Match smarter. Get hired faster.</strong>
+</p>
 
-CareerLens AI is a production-grade full-stack SaaS application helping job seekers evaluate resume structures, scan ATS keyword alignment, compare profiles against technical job descriptions, identify missing skills with structured learning paths, and prepare tailored interview answers using AI.
-
----
-
-## Key Features
-
-- **ATS Score Engine**: Instantly clean and parse PDF/DOCX layouts, returning scoring metrics across keyword density, skills alignment, and structural integrity.
-- **Job Description Matcher**: Paste target job specs to receive compatibility analysis, responsibilities fit ratios, and recommendations.
-- **AI-Powered Suggested Rewrites**: In-line experience rewrite recommendations comparing current wording with metric-driven, action-focused equivalents.
-- **Personalized Interview Planner**: Formulate potential interview topics, sample questions, and strategy answers custom-tuned to candidate experiences.
-- **Tenant Resource Isolation**: Strict database scoping guarantees one user's uploads/analyses are never visible to another.
-- **Flexible AI Integration**: Works with live Gemini API keys or fallback mock analytics handlers for zero-config test drives.
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-15+-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
+  <img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/FastAPI-0.111-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/PostgreSQL-15-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+  <img src="https://img.shields.io/badge/Docker-compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
+</p>
 
 ---
 
-## Tech Stack
+## 📖 Table of Contents
 
-- **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS, Recharts (Analytics), Framer Motion (Animations), Lucide React.
-- **Backend**: FastAPI, Python 3.11, Pydantic, SQLAlchemy.
-- **Database**: PostgreSQL (Production) / SQLite (Local Test/Dev Fallback).
-- **Authentication**: JWT token-based authentication (Access & Refresh cycles), secure password hashing.
-- **Infrastructure**: Docker Multi-Stage containers, Docker Compose, GitHub Actions CI.
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [Architecture & Directory Structure](#-architecture--directory-structure)
+- [Technology Stack](#-technology-stack)
+- [Getting Started](#-getting-started)
+  - [Method A: Run with Docker (Recommended)](#method-a-running-with-docker-recommended)
+  - [Method B: Running Locally](#method-b-running-locally)
+- [Testing & Quality Assurance](#-testing--quality-assurance)
+- [Security & Multi-Tenancy](#-security--multi-tenancy)
+- [License](#-license)
 
 ---
 
-## Directory Architecture
+## 🌟 Overview
+
+**CareerLens AI** is a production-grade, full-stack SaaS application built to empower job seekers in a highly competitive market. By leveraging advanced parsing algorithms and artificial intelligence, the platform helps users optimize their resumes for Applicant Tracking Systems (ATS), target specific job descriptions, and prepare tailored interview answers.
+
+---
+
+## ✨ Key Features
+
+- **📊 ATS Score Engine**: Instantly parses PDF/DOCX layouts, returning scoring metrics across keyword density, skills alignment, and structural integrity.
+- **🎯 Job Description Matcher**: Compare your profile against target job specifications to receive detailed compatibility analysis, responsibilities fit ratios, and recommendations.
+- **✍️ AI-Powered Suggested Rewrites**: In-line experience rewrite recommendations comparing current wording with metric-driven, action-focused equivalents.
+- **💬 Personalized Interview Planner**: Formulate potential interview topics, sample questions, and strategy answers custom-tuned to candidate experiences.
+- **🛡️ Tenant Resource Isolation**: Strict database scoping guarantees one user's uploads/analyses are never visible to another.
+- **🔌 Flexible AI Integration**: Works with live Gemini API keys or fallback mock analytics handlers for zero-config test drives.
+
+---
+
+## 🏗️ Architecture & Directory Structure
 
 ```text
 careerlens-ai/
@@ -58,7 +73,25 @@ careerlens-ai/
 
 ---
 
-## Getting Started
+## 🛠️ Technology Stack
+
+| Component | Technology | Description |
+| :--- | :--- | :--- |
+| **Frontend** | **Next.js 15 (App Router)** | Modern React framework for performance, routing, and SSR |
+| | **TypeScript** | Type safety and enhanced developer experience |
+| | **Tailwind CSS** | Sleek, modern utility-first styling |
+| | **Framer Motion** | Premium micro-interactions and smooth transitions |
+| | **Recharts** | Interactive and responsive analytics graphs |
+| **Backend** | **FastAPI** | High-performance Python web framework for APIs |
+| | **SQLAlchemy** | SQL Toolkit and Object-Relational Mapper (ORM) |
+| | **Pydantic** | Fast data validation and serialization |
+| **Database** | **PostgreSQL** | Production-grade relational database |
+| | **SQLite** | Local dev fallback for zero-config startup |
+| **DevOps** | **Docker & Docker Compose** | Containerized builds and multi-service orchestration |
+
+---
+
+## 🚀 Getting Started
 
 ### Method A: Running with Docker (Recommended)
 
@@ -67,20 +100,26 @@ careerlens-ai/
    ```bash
    docker compose up --build
    ```
-3. Access the frontend at `http://localhost:3000` and the API docs at `http://localhost:8000/docs`.
+3. Access the services:
+   - **Frontend**: [http://localhost:3000](http://localhost:3000)
+   - **API Docs (Swagger)**: [http://localhost:8000/docs](http://localhost:8000/docs)
+
+---
 
 ### Method B: Running Locally
 
 #### 1. Database Setup
-Make sure PostgreSQL is running and update `DATABASE_URL` in `.env` files. If you want a quick run without configuring PostgreSQL, our backend automatically defaults to local SQLite files.
+Make sure PostgreSQL is running and update `DATABASE_URL` in `.env` files. If you want a quick run without configuring PostgreSQL, the backend automatically defaults to local SQLite files.
 
 #### 2. Backend Server
 ```bash
 cd backend
 python -m venv venv
-# Activate on Windows:
-.\venv\Scripts\activate
-# Activate on macOS/Linux:
+
+# Activate Virtual Environment:
+# On Windows (PowerShell):
+.\venv\Scripts\Activate.ps1
+# On macOS/Linux:
 source venv/bin/activate
 
 # Install dependencies:
@@ -94,15 +133,17 @@ uvicorn app.main:app --reload
 ```bash
 cd frontend
 npm install --legacy-peer-deps
+
+# Start development server:
 npm run dev
 ```
-Open `http://localhost:3000` to access the interface.
+Open [http://localhost:3000](http://localhost:3000) to view the interface.
 
 ---
 
-## Testing & Security
+## 🧪 Testing & Quality Assurance
 
-We enforce unit tests verifying resource access scopes (User A must never retrieve or edit User B's resources).
+We enforce robust unit tests verifying resource access scopes to ensure absolute security and correct system behaviors.
 
 To execute tests:
 ```bash
@@ -112,6 +153,13 @@ pytest
 
 ---
 
-## License
+## 🔒 Security & Multi-Tenancy
+
+- **Token Isolation**: Uses JWT token-based authentication (Access & Refresh cycles) with secure password hashing.
+- **Resource Scoping**: Strict row-level scoping guarantees that User A can never retrieve, edit, or access User B's resumes, jobs, or suggestions.
+
+---
+
+## 📄 License
 
 Distributed under the MIT License. See `LICENSE` for more details.
