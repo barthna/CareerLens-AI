@@ -5,7 +5,7 @@ from fastapi.exceptions import RequestValidationError
 
 from app.core.config import settings
 from app.core.database import engine, Base
-from app.api import auth, resumes, jobs, users, dashboard
+from app.api import auth, resumes, jobs, users, dashboard, interviews
 
 # Automatically create tables on startup for instant setup
 try:
@@ -41,6 +41,7 @@ app.include_router(resumes.router, prefix=settings.API_V1_STR)
 app.include_router(jobs.router, prefix=settings.API_V1_STR)
 app.include_router(users.router, prefix=settings.API_V1_STR)
 app.include_router(dashboard.router, prefix=settings.API_V1_STR)
+app.include_router(interviews.router, prefix=settings.API_V1_STR)
 
 # Global Exception Handlers for standard error structure
 @app.exception_handler(HTTPException)

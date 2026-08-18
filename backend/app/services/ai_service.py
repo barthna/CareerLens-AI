@@ -7,6 +7,12 @@ from app.core.config import settings
 from app.prompts.resume_analysis import RESUME_ANALYSIS_PROMPT
 from app.prompts.job_matching import JOB_MATCHING_PROMPT
 from app.prompts.resume_improvement import RESUME_IMPROVEMENT_PROMPT
+from app.prompts.interview_simulator import (
+    INTERVIEW_QUESTION_PROMPT,
+    INTERVIEW_FEEDBACK_PROMPT,
+    INTERVIEW_SCORECARD_PROMPT
+)
+
 
 logger = logging.getLogger("uvicorn.error")
 
@@ -279,3 +285,139 @@ class AIService:
                 }
             ]
         }
+
+    @classmethod
+    async def generate_interview_question(cls, resume_text: str, job_description: str, focus: str, chat_history: str) -> str:
+        """Generates the next customized interview question."""
+        prompt = INTERVIEW_QUESTION_PROMPT.format(
+            resume_text=resume_text,
+            job_description=job_description,
+            focus=focus,
+            chat_history=chat_history or "No history yet. Start the interview."
+        )
+        
+        if not settings.AI_API_KEY:
+            logger.warning("AI_API_KEY not found. Using mock interview questions.")
+            return cls._get_mock_interview_question(chat_history)
+            
+        try:
+            # We don't request JSON for this endpoint since it's just raw question text.
+            # But the _call_gemini method in settings uses responseMimeType="application/json".
+            # Oh wait, let's verify if _call_gemini always requires responseMimeType="application/json"!
+            # In ai_service.py: settings.AI_MODEL, responseMimeType is indeed hardcoded.
+            # Wait, if responseMimeType is application/json, Gemini expects to return JSON, which we can parse or extract.
+            # Let's write a generic question-call or wrap the question prompt in a JSON wrapper.
+            # That's much safer! Let's check _call_gemini:
+            # line 27: "responseMimeType": "application/json"
+            # Since Gemini is configured to output JSON, we should instruct it to return JSON containing the question!
+            # Let's adjust prompt or handle it by requesting JSON. Let's look at how the question prompt is written.
+            # Let's ask Gemini to return: {"question": "..."}
+            pass
+        except Exception:
+            pass
+
+        # To avoid issues with raw string generation when Gemini is forced to return JSON,
+        # we will request a JSON object: {"question": "..."} and parse it. Let's implement that!
+        json_prompt = prompt + "\nRespond with a valid JSON object ONLY containing a single key 'question' with the string value of the question."
+        try:
+            raw_response = await cls._call_gemini(json_prompt)
+            clean_json = cls._clean_json_response(raw_response)
+            data = json.loads(clean_json)
+            return data.get("question", "Could you describe your technical background and some projects you've worked on?")
+        except Exception as e:
+            logger.error(f"Error generating interview question: {str(e)}. Falling back to mock question.")
+            return cls._get_mock_interview_question(chat_history)
+
+    @classmethod
+    async def evaluate_interview_response(cls, resume_text: str, job_description: str, question: str, response: str) -> Dict[str, Any]:
+        """Evaluates a candidate's interview response with scores and constructive feedback."""
+        prompt = INTERVIEW_FEEDBACK_PROMPT.format(
+            resume_text=resume_text,
+            job_description=job_description,
+            question=question,
+            response=response
+        )
+        
+        if not settings.AI_API_KEY:
+            logger.warning("AI_API_KEY not found. Using mock evaluation.")
+            return cls._get_mock_interview_evaluation(question, response)
+            
+        try:
+            raw_response = await cls._call_gemini(prompt)
+            clean_json = cls._clean_json_response(raw_response)
+            return json.loads(clean_json)
+        except Exception as e:
+            logger.error(f"Error evaluating interview response: {str(e)}. Falling back to mock.")
+            return cls._get_mock_interview_evaluation(question, response)
+
+    @classmethod
+    async def generate_interview_scorecard(cls, transcript: str) -> Dict[str, Any]:
+        """Generates the overall performance scorecard at the end of the interview."""
+        prompt = INTERVIEW_SCORECARD_PROMPT.format(transcript=transcript)
+        
+        if not settings.AI_API_KEY:
+            logger.warning("AI_API_KEY not found. Using mock scorecard.")
+            return cls._get_mock_interview_scorecard()
+            
+        try:
+            raw_response = await cls._call_gemini(prompt)
+            clean_json = cls._clean_json_response(raw_response)
+            return json.loads(clean_json)
+        except Exception as e:
+            logger.error(f"Error generating interview scorecard: {str(e)}. Falling back to mock.")
+            return cls._get_mock_interview_scorecard()
+
+    @staticmethod
+    def _get_mock_interview_question(chat_history: str) -> str:
+        # Count Q&A pairs in history to decide which question to ask next
+        # Let's count occurrences of "Question:" or just length of history
+        q_count = chat_history.count("Question:")
+        questions = [
+            "To start off, could you walk me through your background and explain why you're interested in this role?",
+            "I see you have React and TypeScript experience. Can you describe a challenging frontend component you built and how you optimized its rendering performance?",
+            "In your experience, how do you handle security and authentication when designing REST APIs with frameworks like FastAPI?",
+            "Can you tell me about a time you worked with a cross-functional team and how you resolved a technical disagreement?",
+            "Great. Finally, how do you approach database performance tuning and caching for heavy read applications?",
+            "That's all the questions I have. Thank you!"
+        ]
+        if q_count < len(questions):
+            return questions[q_count]
+        return "That's all the questions I have. Thank you!"
+
+    @staticmethod
+    def _get_mock_interview_evaluation(question: str, response: str) -> Dict[str, Any]:
+        word_count = len(response.split())
+        score = 60 if word_count < 10 else (75 if word_count < 25 else 88)
+        
+        strengths = ["Structured explanation of the concept."]
+        improvements = []
+        if word_count < 15:
+            improvements.append("Response is too brief. Try to explain with a specific example from your past work using the STAR method (Situation, Task, Action, Result).")
+        else:
+            improvements.append("Could include more concrete metrics or outcomes of your optimization.")
+            strengths.append("Demonstrated direct familiarity with the requested technical stack.")
+
+        return {
+            "score": score,
+            "strengths": strengths,
+            "improvements": improvements,
+            "alternative_response": f"An excellent answer would be: 'In my previous project, when faced with this issue, I first profiled the performance using Chrome DevTools, identified the bottleneck in redundant re-renders, and optimized it by memoizing the component context, resulting in a 30% speedup.'"
+        }
+
+    @staticmethod
+    def _get_mock_interview_scorecard() -> Dict[str, Any]:
+        return {
+            "overall_score": 84,
+            "technical_score": 86,
+            "communication_score": 82,
+            "performance_summary": "Excellent performance! You answered the questions clearly, structuring your thoughts well. You showed solid familiarity with React and API design, though systems scaling could benefit from more detailed explanation.",
+            "key_strengths": [
+                "Strong coding foundations and understanding of modern framework architectures",
+                "Clear, structured communication pattern"
+            ],
+            "key_weaknesses": [
+                "Could dive deeper into system-level bottlenecks like database connection pool limits or docker containers",
+                "Some responses could be more quantitative"
+            ]
+        }
+

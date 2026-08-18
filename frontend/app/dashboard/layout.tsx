@@ -6,7 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { 
   Sparkles, LayoutDashboard, FileText, ClipboardList, 
   Briefcase, Bookmark, Settings, User, Bell, Power, 
-  Menu, X, LineChart, Search, AlertCircle
+  Menu, X, LineChart, Search, AlertCircle, HelpCircle
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { ToastProvider, useToast } from '@/components/Toast';
@@ -51,6 +51,7 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
     { name: 'My Resumes', path: '/dashboard/resumes', icon: FileText },
     { name: 'Resume Analyzer', path: '/dashboard/analyzer', icon: ClipboardList },
     { name: 'Job Matcher', path: '/dashboard/matcher', icon: Briefcase },
+    { name: 'Interview Prep', path: '/dashboard/interview-simulator', icon: HelpCircle },
     { name: 'Saved Jobs', path: '/dashboard/saved-jobs', icon: Bookmark },
     { name: 'Analytics', path: '/dashboard/analytics', icon: LineChart },
     { name: 'Profile', path: '/dashboard/profile', icon: User },
