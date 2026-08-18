@@ -1,5 +1,3 @@
-# <p align="center"><img src="assets/banner.png" alt="CareerLens AI Banner" width="100%" style="border-radius: 10px;" /></p>
-
 <h1 align="center">🔍 CareerLens AI</h1>
 
 <p align="center">
