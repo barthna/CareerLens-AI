@@ -26,7 +26,6 @@
   - [Method B: Running Locally](#method-b-running-locally)
 - [Testing & Quality Assurance](#-testing--quality-assurance)
 - [Security & Multi-Tenancy](#-security--multi-tenancy)
-- [License](#-license)
 
 ---
 
@@ -155,9 +154,3 @@ pytest
 
 - **Token Isolation**: Uses JWT token-based authentication (Access & Refresh cycles) with secure password hashing.
 - **Resource Scoping**: Strict row-level scoping guarantees that User A can never retrieve, edit, or access User B's resumes, jobs, or suggestions.
-
----
-
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` for more details.
