@@ -1,6 +1,10 @@
 <h1 align="center">🔍 CareerLens AI</h1>
 
 <p align="center">
+  <img src="https://img.shields.io/badge/Status-Active%20Development-orange?style=for-the-badge&logo=git" alt="Status: Active Development" />
+</p>
+
+<p align="center">
   <strong>Understand your resume. Match smarter. Get hired faster.</strong>
 </p>
 
@@ -12,6 +16,9 @@
   <img src="https://img.shields.io/badge/PostgreSQL-15-4169E1?style=flat&logo=postgresql" alt="PostgreSQL" />
   <img src="https://img.shields.io/badge/Docker-compose-2496ED?style=flat&logo=docker" alt="Docker" />
 </p>
+
+> [!NOTE]
+> **Active Development Notice:** This project is actively being developed and updated. New features and visual refinements are added frequently.
 
 ---
 
