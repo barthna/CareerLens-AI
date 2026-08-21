@@ -20,28 +20,50 @@ export default function JobMatcher() {
   const [matchData, setMatchData] = useState<any>(null);
 
   useEffect(() => {
-    async function loadResumes() {
+    const searchParams = new URLSearchParams(window.location.search);
+    const savedJobId = searchParams.get('saved_job_id');
+
+    async function loadResumesAndSavedJob() {
       const isDemo = localStorage.getItem('demo_mode') === 'true';
+      let selectedJob: any = null;
+
       if (isDemo) {
         setResumes([
           { id: 101, filename: 'software_engineer_cv.pdf' },
           { id: 102, filename: 'product_manager_resume.docx' }
         ]);
         setSelectedResumeId('101');
-        return;
+
+        if (savedJobId) {
+          const demoJobs = [
+            { id: 201, title: 'Full Stack Engineer', company: 'Stripe', description: 'Looking for a generalist engineer with deep expertise in React and Python.' },
+            { id: 202, title: 'Senior Frontend Developer', company: 'Vercel', description: 'Work on building the next generation of Next.js features and layouts.' }
+          ];
+          selectedJob = demoJobs.find(j => j.id.toString() === savedJobId);
+        }
+      } else {
+        try {
+          const data = await api.request('/resumes');
+          setResumes(data);
+          if (data.length > 0) {
+            setSelectedResumeId(data[0].id.toString());
+          }
+
+          if (savedJobId) {
+            selectedJob = await api.request(`/jobs/saved/${savedJobId}`);
+          }
+        } catch (err: any) {
+          toast('Failed to load initial data.', 'error');
+        }
       }
 
-      try {
-        const data = await api.request('/resumes');
-        setResumes(data);
-        if (data.length > 0) {
-          setSelectedResumeId(data[0].id.toString());
-        }
-      } catch (err: any) {
-        toast('Failed to load resumes list.', 'error');
+      if (selectedJob) {
+        setJobTitle(selectedJob.title || '');
+        setCompany(selectedJob.company || '');
+        setJobDescription(selectedJob.description || '');
       }
     }
-    loadResumes();
+    loadResumesAndSavedJob();
   }, [toast]);
 
   const handleMatch = async (e: React.FormEvent) => {

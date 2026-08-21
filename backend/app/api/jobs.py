@@ -124,6 +124,17 @@ def list_saved_jobs(
 ) -> Any:
     return db.query(SavedJob).filter(SavedJob.user_id == current_user.id).order_by(SavedJob.created_at.desc()).all()
 
+@router.get("/saved/{id}", response_model=SavedJobResponse)
+def get_saved_job(
+    id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+) -> Any:
+    job = db.query(SavedJob).filter(SavedJob.id == id, SavedJob.user_id == current_user.id).first()
+    if not job:
+        raise HTTPException(status_code=404, detail="Saved job not found")
+    return job
+
 @router.delete("/saved/{id}")
 def delete_saved_job(
     id: int,

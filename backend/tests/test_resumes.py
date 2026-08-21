@@ -66,3 +66,35 @@ def test_resume_isolation(client):
     )
     assert get_res_a.status_code == 200
     assert get_res_a.json()["filename"] == "resume.pdf"
+
+
+def test_saved_jobs(client):
+    # 1. Register and Login User A
+    client.post(
+        "/api/auth/register",
+        json={"email": "user_saved_job@example.com", "password": "password123", "name": "User SJ"},
+    )
+    login_res = client.post(
+        "/api/auth/login",
+        json={"email": "user_saved_job@example.com", "password": "password123"},
+    ).json()
+    headers = {"Authorization": f"Bearer {login_res['access_token']}"}
+
+    # 2. Add saved job
+    add_res = client.post(
+        "/api/jobs/saved",
+        json={"title": "Staff Engineer", "company": "Google", "job_url": "https://google.com", "description": "Staff Dev"},
+        headers=headers
+    )
+    assert add_res.status_code == 200
+    job_id = add_res.json()["id"]
+
+    # 3. Retrieve saved job details
+    get_res = client.get(f"/api/jobs/saved/{job_id}", headers=headers)
+    assert get_res.status_code == 200
+    assert get_res.json()["title"] == "Staff Engineer"
+    assert get_res.json()["company"] == "Google"
+
+    # 4. Get non-existent saved job details
+    get_res_nonexistent = client.get("/api/jobs/saved/9999", headers=headers)
+    assert get_res_nonexistent.status_code == 404

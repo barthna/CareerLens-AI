@@ -40,37 +40,48 @@ export default function InterviewSimulator() {
 
   useEffect(() => {
     async function loadInitialData() {
+      const searchParams = new URLSearchParams(window.location.search);
+      const savedJobId = searchParams.get('saved_job_id');
+      
       const isDemo = localStorage.getItem('demo_mode') === 'true';
+      let fetchedJobs: any[] = [];
+      
       if (isDemo) {
         setResumes([
           { id: 101, filename: 'software_engineer_cv.pdf' },
           { id: 102, filename: 'product_manager_resume.docx' }
         ]);
-        setSavedJobs([
+        fetchedJobs = [
           { id: 201, title: 'Full Stack Engineer', company: 'Stripe', description: 'Looking for a generalist engineer with deep expertise in React and Python.' },
           { id: 202, title: 'Senior Frontend Developer', company: 'Vercel', description: 'Work on building the next generation of Next.js features and layouts.' }
-        ]);
+        ];
+        setSavedJobs(fetchedJobs);
         setSelectedResumeId('101');
-        setSelectedJobId('201');
-        setJobDescription('Looking for a generalist engineer with deep expertise in React and Python.');
-        return;
+      } else {
+        try {
+          const resumeData = await api.request('/resumes');
+          setResumes(resumeData);
+          if (resumeData.length > 0) {
+            setSelectedResumeId(resumeData[0].id.toString());
+          }
+
+          fetchedJobs = await api.request('/jobs/saved');
+          setSavedJobs(fetchedJobs);
+        } catch (err: any) {
+          toast('Failed to load initial data for simulator.', 'error');
+        }
       }
 
-      try {
-        const resumeData = await api.request('/resumes');
-        setResumes(resumeData);
-        if (resumeData.length > 0) {
-          setSelectedResumeId(resumeData[0].id.toString());
+      if (savedJobId && fetchedJobs.length > 0) {
+        const job = fetchedJobs.find((j: any) => j.id.toString() === savedJobId);
+        if (job) {
+          setSelectedJobId(job.id.toString());
+          setJobDescription(job.description || '');
+          setIsCustomJob(false);
         }
-
-        const jobsData = await api.request('/jobs/saved');
-        setSavedJobs(jobsData);
-        if (jobsData.length > 0) {
-          setSelectedJobId(jobsData[0].id.toString());
-          setJobDescription(jobsData[0].description || '');
-        }
-      } catch (err: any) {
-        toast('Failed to load initial data for simulator.', 'error');
+      } else if (fetchedJobs.length > 0) {
+        setSelectedJobId(fetchedJobs[0].id.toString());
+        setJobDescription(fetchedJobs[0].description || '');
       }
     }
     loadInitialData();

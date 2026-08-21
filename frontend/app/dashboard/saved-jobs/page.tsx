@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Bookmark, Trash2, ArrowUpRight, Search, Plus, Sparkles } from 'lucide-react';
+import Link from 'next/link';
+import { Bookmark, Trash2, ArrowUpRight, Search, Plus, Sparkles, Briefcase } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/Toast';
 
@@ -255,28 +256,47 @@ export default function SavedJobs() {
                 )}
               </div>
 
-              <div className="flex items-center justify-between border-t border-slate-900 pt-3 mt-4">
-                {j.job_url ? (
-                  <a 
-                    href={j.job_url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-[11px] font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-0.5"
+              <div className="flex flex-col gap-3 mt-4 border-t border-slate-900 pt-3">
+                <div className="flex gap-2">
+                  <Link
+                    href={`/dashboard/matcher?saved_job_id=${j.id}`}
+                    className="flex-1 text-center bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 border border-indigo-500/20 py-1.5 px-3 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                   >
-                    <span>Visit Job Page</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </a>
-                ) : (
-                  <span className="text-[10px] text-slate-500">No URL link</span>
-                )}
+                    <Briefcase className="w-3.5 h-3.5" />
+                    <span>Match Resume</span>
+                  </Link>
+                  <Link
+                    href={`/dashboard/interview-simulator?saved_job_id=${j.id}`}
+                    className="flex-1 text-center bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/20 py-1.5 px-3 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Practice Interview</span>
+                  </Link>
+                </div>
 
-                <button
-                  onClick={() => handleDelete(j.id)}
-                  className="text-red-400 hover:text-red-300 p-1 rounded hover:bg-red-500/10 transition-colors"
-                  title="Remove Job"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                <div className="flex items-center justify-between mt-1">
+                  {j.job_url ? (
+                    <a 
+                      href={j.job_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-[11px] font-bold text-slate-400 hover:text-slate-200 flex items-center gap-0.5 transition-colors"
+                    >
+                      <span>Visit Job Page</span>
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </a>
+                  ) : (
+                    <span className="text-[10px] text-slate-500">No URL link</span>
+                  )}
+
+                  <button
+                    onClick={() => handleDelete(j.id)}
+                    className="text-red-400 hover:text-red-300 p-1 rounded hover:bg-red-500/10 transition-colors cursor-pointer"
+                    title="Remove Job"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             </div>
           ))}
