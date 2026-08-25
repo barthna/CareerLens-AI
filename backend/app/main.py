@@ -89,3 +89,20 @@ async def general_exception_handler(request: Request, exc: Exception):
 @app.get("/")
 def read_root():
     return {"name": settings.PROJECT_NAME, "status": "healthy", "version": "1.0.0"}
+
+@app.get("/health")
+def health_check():
+    from sqlalchemy import text
+    db_status = "healthy"
+    try:
+        # Run a simple query to verify database connection
+        with engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+    except Exception as e:
+        db_status = f"unhealthy: {str(e)}"
+        
+    return {
+        "status": "healthy" if db_status == "healthy" else "degraded",
+        "database": db_status,
+        "version": "1.0.0"
+    }
